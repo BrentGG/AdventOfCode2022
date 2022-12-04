@@ -9,7 +9,7 @@ if __name__ == '__main__':
         firstEnd = int(first[first.find("-") + 1:])
         secondBegin = int(second[:second.find("-")])
         secondEnd = int(second[second.find("-") + 1:])
-        if (firstBegin >= secondBegin and firstEnd <= secondEnd) or (secondBegin >= firstBegin and secondEnd <= firstEnd):
+        if (secondBegin <= firstBegin <= secondEnd) or (secondBegin <= firstEnd <= secondEnd) or (firstBegin <= secondBegin <= firstEnd) or (firstBegin <= secondEnd <= firstEnd):
             count += 1
     print(count)
 
