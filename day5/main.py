@@ -38,7 +38,6 @@ if __name__ == '__main__':
         frm = int(line[startFrom + 5: startTo - 1]) - 1
         to = int(line[startTo + 3:]) - 1
         toAdd = stacks[frm][len(stacks[frm]) - amount:]
-        toAdd.reverse()
         stacks[to].extend(toAdd)
         stacks[frm] = stacks[frm][:len(stacks[frm]) - amount]
     for stack in stacks:
