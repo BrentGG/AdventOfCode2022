@@ -6,9 +6,10 @@ if __name__ == '__main__':
     currentIdx = 0
     for line in inputFile:
         if line == "$ cd /\n":
+            dirs[parentIdxs[currentIdx]] += dirs[currentIdx]
             currentIdx = 0
         elif line == "$ cd ..\n":
-            dirs[parentIdxs[currentIdx]] += dirs[currentIdx]
+            # dirs[parentIdxs[currentIdx]] += dirs[currentIdx]
             currentIdx = parentIdxs[currentIdx]
         elif line[:4] == "$ cd":
             dirs.append(0)
@@ -20,9 +21,18 @@ if __name__ == '__main__':
             dirs[currentIdx] += int(line[:line.find(" ")])
 
     count = 0
+    for i in range(len(dirs) - 1, -1, -1):
+        for j in range(len(dirs)):
+            if parentIdxs[j] == i:
+                count += dirs[j]
+        dirs[i] += count
+        count = 0
+
+    neededSpace = 30000000 - (70000000 - dirs[0])
+    minimum = dirs[0]
     for d in dirs:
-        if d <= 100000:
-            count += d
-    print(count)
+        if neededSpace <= d < minimum:
+            minimum = d
+    print(minimum)
 
     inputFile.close()
