@@ -10,30 +10,37 @@ if __name__ == '__main__':
                 grid[index].append(int(nr))
         index += 1
 
-    visibleTrees = []
-    for row in range(1, len(grid) - 1):
-        highestInRow = grid[row][0]
-        for col in range(1, len(grid[0]) - 1):
-            if grid[row][col] > highestInRow:
-                highestInRow = grid[row][col]
-                visibleTrees.append(str(row) + "," + str(col))
-        highestInRow = grid[row][len(grid[row]) - 1]
-        for col in range(len(grid[0]) - 2, 0, -1):
-            if grid[row][col] > highestInRow:
-                highestInRow = grid[row][col]
-                visibleTrees.append(str(row) + "," + str(col))
-    for col in range(1, len(grid[0]) - 1):
-        highestInCol = grid[0][col]
-        for row in range(1, len(grid) - 1):
-            if grid[row][col] > highestInCol:
-                highestInCol = grid[row][col]
-                visibleTrees.append(str(row) + "," + str(col))
-        highestInCol = grid[len(grid) - 1][col]
-        for row in range(len(grid) - 2, 0, -1):
-            if grid[row][col] > highestInCol:
-                highestInCol = grid[row][col]
-                visibleTrees.append(str(row) + "," + str(col))
-    visibleTrees = list(set(visibleTrees))
-    print(len(visibleTrees) + len(grid) * 2 + len(grid[0]) * 2 - 4)
+    highestScore = 0
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            score = 1
+            viewingDist = 0
+            for i in range(row + 1, len(grid)):
+                viewingDist += 1
+                if grid[i][col] >= grid[row][col]:
+                    break
+            score *= viewingDist
+            viewingDist = 0
+            for i in range(row - 1, -1, -1):
+                viewingDist += 1
+                if grid[i][col] >= grid[row][col]:
+                    break
+            score *= viewingDist
+            viewingDist = 0
+            for i in range(col + 1, len(grid[0])):
+                viewingDist += 1
+                if grid[row][i] >= grid[row][col]:
+                    break
+            score *= viewingDist
+            viewingDist = 0
+            for i in range(col - 1, -1, -1):
+                viewingDist += 1
+                if grid[row][i] >= grid[row][col]:
+                    break
+            score *= viewingDist
+            viewingDist = 0
+            if score > highestScore:
+                highestScore = score
+    print(highestScore)
 
     inputFile.close()
