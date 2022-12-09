@@ -1,32 +1,34 @@
 if __name__ == '__main__':
     inputFile = open("input.txt", "r")
 
-    headPos = [0, 0]
-    tailPos = [0, 0]
+    nodes = []
+    for i in range(10):
+        nodes.append([0, 0])
     visited = ["0,0"]
     for line in inputFile:
         moveDirection = line[0]
         moveAmount = int(line[2:])
         while moveAmount > 0:
             if moveDirection == 'U':
-                headPos[1] += 1
+                nodes[0][1] += 1
             elif moveDirection == 'D':
-                headPos[1] -= 1
+                nodes[0][1] -= 1
             elif moveDirection == 'L':
-                headPos[0] -= 1
+                nodes[0][0] -= 1
             elif moveDirection == 'R':
-                headPos[0] += 1
+                nodes[0][0] += 1
             moveAmount -= 1
-            if not(headPos[0] - 1 <= tailPos[0] <= headPos[0] + 1 and headPos[1] - 1 <= tailPos[1] <= headPos[1] + 1):
-                if headPos[1] > tailPos[1]:
-                    tailPos[1] += 1
-                elif headPos[1] < tailPos[1]:
-                    tailPos[1] -= 1
-                if headPos[0] > tailPos[0]:
-                    tailPos[0] += 1
-                elif headPos[0] < tailPos[0]:
-                    tailPos[0] -= 1
-                visited.append(str(tailPos[0]) + "," + str(tailPos[1]))
+            for i in range(1, len(nodes)):
+                if not(nodes[i - 1][0] - 1 <= nodes[i][0] <= nodes[i - 1][0] + 1 and nodes[i - 1][1] - 1 <= nodes[i][1] <= nodes[i - 1][1] + 1):
+                    if nodes[i - 1][1] > nodes[i][1]:
+                        nodes[i][1] += 1
+                    elif nodes[i - 1][1] < nodes[i][1]:
+                        nodes[i][1] -= 1
+                    if nodes[i - 1][0] > nodes[i][0]:
+                        nodes[i][0] += 1
+                    elif nodes[i - 1][0] < nodes[i][0]:
+                        nodes[i][0] -= 1
+            visited.append(str(nodes[len(nodes) - 1][0]) + "," + str(nodes[len(nodes) - 1][1]))
     print(len(list(set(visited))))
 
     inputFile.close()
