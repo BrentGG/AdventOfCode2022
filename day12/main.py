@@ -11,7 +11,7 @@ def isNeighbour(heightMap, neighbour, pos, unvisited):
         return False
     if neighbour[0] < 0 or neighbour[0] >= len(heightMap) or neighbour[1] < 0 or neighbour[1] >= len(heightMap[0]):
         return False
-    if heightMap[neighbour[0]][neighbour[1]] > heightMap[pos[0]][pos[1]] + 1:
+    if heightMap[neighbour[0]][neighbour[1]] < heightMap[pos[0]][pos[1]] - 1:
         return False
     return True
 
@@ -29,7 +29,7 @@ def getNeighbours(heightMap, pos, unvisited):
     return neighbours
 
 
-def dijkstra(heightMap, source, target):
+def dijkstra(heightMap, source):
     distance = []
     previous = []
     unvisited = []
@@ -44,8 +44,8 @@ def dijkstra(heightMap, source, target):
 
     while len(unvisited) > 0:
         current = searchMin(distance, unvisited)
-        if current == target:
-            break
+        if heightMap[current[0]][current[1]] == 0:
+            return distance[current[0]][current[1]]
         unvisited.remove(current)
         for neighbour in getNeighbours(heightMap, current, unvisited):
             newDist = distance[current[0]][current[1]] + 1
@@ -53,22 +53,20 @@ def dijkstra(heightMap, source, target):
                 distance[neighbour[0]][neighbour[1]] = newDist
                 previous[neighbour[0]][neighbour[1]] = current
 
-    return distance, previous
-
 
 if __name__ == '__main__':
     inputFile = open("input.txt", "r")
 
     heightMap = []
-    start = [0, 0]
+    starts = []
     end = [0, 0]
     row = 0
     for line in inputFile:
         heightMap.append([])
         col = 0
         for c in line:
-            if c == 'S':
-                start = [row, col]
+            if c == 'S' or c == 'a':
+                starts.append([row, col])
                 heightMap[row].append(0)
             elif c == 'E':
                 end = [row, col]
@@ -78,7 +76,7 @@ if __name__ == '__main__':
             col += 1
         row += 1
 
-    dist, prev = dijkstra(heightMap, start, end)
-    print(dist[end[0]][end[1]])
+    minimum = dijkstra(heightMap, end)
+    print(minimum)
 
     inputFile.close()
