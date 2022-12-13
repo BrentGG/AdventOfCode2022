@@ -27,19 +27,37 @@ def compare(p1, p2):
         idx += 1
 
 
+def sortPackets(packets):
+    if compare(packets[0], packets[1]) == 1:
+        sortedPackets = [packets[0], packets[1]]
+    else:
+        sortedPackets = [packets[1], packets[0]]
+    for i in range(2, len(packets)):
+        isSorted = False
+        for j in range(len(sortedPackets)):
+            if compare(packets[i], sortedPackets[j]) == 1:
+                sortedPackets.insert(j, packets[i])
+                isSorted = True
+                break
+        if not isSorted:
+            sortedPackets.append(packets[i])
+    return sortedPackets
+
+
 if __name__ == '__main__':
     inputFile = open("input.txt", "r")
 
-    idx = 1
-    idxSum = 0
-    while True:
-        p1 = eval(inputFile.readline())
-        p2 = eval(inputFile.readline())
-        if compare(p1, p2) == 1:
-            idxSum += idx
-        idx += 1
-        if inputFile.readline() == "":
-            break
-    print(idxSum)
+    packets = [[[2]], [[6]]]
+    for line in inputFile:
+        if line != "\n":
+            packets.append(eval(line))
+
+    packets = sortPackets(packets)
+
+    key = 1
+    for i in range(len(packets)):
+        if packets[i] == [[2]] or packets[i] == [[6]]:
+            key *= i + 1
+    print(key)
 
     inputFile.close()
