@@ -1,16 +1,3 @@
-def stringToList(string, index):
-    result = []
-    while index < len(string):
-        if string[index] == '[':
-            temp, index = stringToList(string, index + 1)
-            result.append(temp)
-        elif string[index] == ']':
-            return result, index
-        elif string[index] != ',' and string[index] != ' ':
-            result.append(int(string[index]))
-        index += 1
-
-
 def compare(p1, p2):
     idx = 0
     while True:
@@ -46,18 +33,11 @@ if __name__ == '__main__':
     idx = 1
     idxSum = 0
     while True:
-        p1, _ = stringToList(inputFile.readline().replace("\n", ""), 1)
-        p2, _ = stringToList(inputFile.readline().replace("\n", ""), 1)
-        print(p1)
-        print(p2)
-
-        result = compare(p1, p2)
-        print("Correct order." if result == 1 else "Incorrect order.")
-        if result == 1:
+        p1 = eval(inputFile.readline())
+        p2 = eval(inputFile.readline())
+        if compare(p1, p2) == 1:
             idxSum += idx
         idx += 1
-        print()
-
         if inputFile.readline() == "":
             break
     print(idxSum)

@@ -1,3 +1,6 @@
+import time
+
+
 def isPossibleMove(heightMap, moveTo, moveFrom, covered):
     if moveTo[0] < 0 or moveTo[0] >= len(heightMap) or moveTo[1] < 0 or moveTo[1] >= len(heightMap[0]):
         return False
@@ -32,7 +35,7 @@ def pathFind(heightMap, end, pos, steps, covered):
 
 
 if __name__ == '__main__':
-    inputFile = open("testinput.txt", "r")
+    inputFile = open("input.txt", "r")
 
     heightMap = []
     start = [0, 0]
@@ -53,6 +56,8 @@ if __name__ == '__main__':
             col += 1
         row += 1
 
+    startTime = time.time()
     print(pathFind(heightMap, end, start, 0, []))
+    print("Execution took " + str(time.time() - startTime) + " seconds.")
 
     inputFile.close()
