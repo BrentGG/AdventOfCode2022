@@ -20,11 +20,11 @@ if __name__ == '__main__':
             line = line[index + 3:]
 
     scan = []
-    for i in range(yMax + 1):
+    for i in range(yMax + 1 + 2):
         scan.append([])
-        for j in range(xMax - xMin + 1):
+        for j in range(xMax - xMin + 1 + (yMax + 2) * 2):
             scan[i].append(0)
-    scan[0][500 - xMin] = 2
+    scan[0][500 - xMin + yMax + 2] = 2
 
     inputFile.close()
     inputFile = open("input.txt", "r")
@@ -37,7 +37,7 @@ if __name__ == '__main__':
                 index = len(line)
             coordString = line[:index]
             index2 = coordString.find(",")
-            x, y = int(coordString[:index2]) - xMin, int(coordString[index2 + 1:])
+            x, y = int(coordString[:index2]) - xMin + yMax + 2, int(coordString[index2 + 1:])
             if prevX != -1:
                 if prevX == x:
                     for i in range(prevY if prevY < y else y, y + 1 if y > prevY else prevY + 1):
@@ -51,33 +51,28 @@ if __name__ == '__main__':
             line = line[index + 3:]
         scan[prevY][prevX] = 1
         prevX, prevY = -1, -1
+    for i in range(len(scan[0])):
+        scan[len(scan) - 1][i] = 1
 
-    startX, startY = 500 - xMin, 0
+    startX, startY = 500 - xMin + yMax + 2, 0
     toRest = 0
-    intoVoid = False
-    while not intoVoid:
+    stop = False
+    while not stop:
         x, y = startX, startY
         while True:
-            if y + 1 >= len(scan):
-                intoVoid = True
-                break
             if scan[y + 1][x] == 0:
                 y += 1
                 continue
-            if x - 1 < 0:
-                intoVoid = True
-                break
             if scan[y + 1][x - 1] == 0:
                 x -= 1
                 continue
-            if x + 1 >= len(scan[0]):
-                intoVoid = True
-                break
             if scan[y + 1][x + 1] == 0:
                 x += 1
                 continue
             scan[y][x] = 3
             toRest += 1
+            if x == startX and y == startY:
+                stop = True
             break
 
     for row in scan:
