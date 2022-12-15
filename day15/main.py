@@ -10,6 +10,41 @@ def updateBounds(xMin, xMax, yMin, yMax, xNew, yNew):
     return xMin, xMax, yMin, yMax
 
 
+def sortCovered(covered, reverse):
+    newCovered = [covered[0]]
+    for i in range(1, len(covered)):
+        sorted = False
+        for j in range(len(newCovered)):
+            if not reverse:
+                if covered[i][0] < newCovered[j][0]:
+                    newCovered.insert(j, covered[i])
+                    sorted = True
+                    break
+            else:
+                if covered[i][1] > newCovered[j][1]:
+                    newCovered.insert(j, covered[i])
+                    sorted = True
+                    break
+        if not sorted:
+            newCovered.append(covered[i])
+    return newCovered
+
+
+def isFullyCovered(min, max, covered):
+    covered = sortCovered(covered, False)
+    if covered[0][0] > min:
+        return False, min
+    tempMax = covered[0][1]
+    for i in range(len(covered) - 1):
+        if covered[i + 1][0] > tempMax:
+            return False, covered[i][1] + 1
+        if covered[i + 1][1] > tempMax:
+            tempMax = covered[i + 1][1]
+    if tempMax < max:
+        return False, max
+    return True, None
+
+
 if __name__ == '__main__':
     inputFile = open("input.txt", "r")
 
@@ -33,14 +68,18 @@ if __name__ == '__main__':
         xMin, xMax, yMin, yMax = updateBounds(xMin, xMax, yMin, yMax, sensX + dist, sensY)
         xMin, xMax, yMin, yMax = updateBounds(xMin, xMax, yMin, yMax, sensX, sensY + dist)
 
-    y = 2000000
-    covered = 0
-    for x in range(xMin, xMax + 1):
+    tuningFreq = 0
+    min, max = 0, 4000000
+    for y in range(min, max + 1):
+        covered = []
         for i in range(len(sensors)):
-            dist = abs(x - sensors[i][0]) + abs(y - sensors[i][1])
-            if dist <= distance[i] and [x, y] not in beacons:
-                covered += 1
-                break
-    print(covered)
+            distToSpare = distance[i] - abs(sensors[i][1] - y)
+            if distToSpare >= 0:
+                covered.append([sensors[i][0] - distToSpare, sensors[i][0] + distToSpare])
+        isCovered, freeX = isFullyCovered(min, max, covered)
+        if not isCovered:
+            tuningFreq = freeX * 4000000 + y
+            break
+    print(tuningFreq)
 
     inputFile.close()
